@@ -1,89 +1,10 @@
-"use client";
-
-import { Button, Callout, Text, TextArea, TextField } from "@radix-ui/themes";
-// import React from "react";
-import dynamic from "next/dynamic";
-// import SimpleMDE from "react-simplemde-editor";
-import { useForm, Controller } from "react-hook-form";
-import axios from "axios";
-import "easymde/dist/easymde.min.css";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { createTaskSchema } from "@/app/validationSchemas";
-import { z } from "zod";
-import { ErrorMessage } from "@/app/components/ErrorMessage";
-import Spinner from "@/app/components/Spinner";
-
-//this is lazy loading (component) because everything is ;oaded on the server initially but this is a client side component that uses navigator - a browser API
-//so we need to disable static import and load it dynamically
-const SimpleMDE = dynamic(()=>import('react-simplemde-editor'),
-{ssr: false})
-
-type TaskForm = z.infer<typeof createTaskSchema>;
-//we're implementing client side validation with help of zod and axios
-// interface TaskForm {  ---> we are letting Zod infer this type based on this schema
-//   title: string;    ----> z.infer func returns a type, so we store it in type object
-//   description: string;
-// }
+// import React from 'react'
+import TaskForm from '../_components/TaskForm'
 
 const NewTaskPage = () => {
-  const router = useRouter();
-  const {
-    register,
-    control,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<TaskForm>({
-    resolver: zodResolver(createTaskSchema),
-  });
-  // console.log(register('title'))
-  const [error, setError] = useState("");
-  const [isSubmitting, setSubmitting] = useState(false);
-
-  const onSubmit = handleSubmit(async (data) => {
-    try {
-      setSubmitting(true);
-      await axios.post("/api/tasks", data);
-      router.push("/tasks");
-    } catch (error) {
-      setSubmitting(false);
-      // console.log(error)
-      setError("Unexpected Error");
-    }
-  })
-
   return (
-    <div className="max-w-xl">
-      {error && (
-        <Callout.Root color="red" className="mb-5">
-          <Callout.Text>{error}</Callout.Text>
-        </Callout.Root>
-      )}
-      <form
-        className="max-w-xl space-y-3"
-        onSubmit={onSubmit}
-      >
-        <TextField.Root size="1" placeholder="New Task" {...register("title")}>
-          {/* <TextArea placeholder="New Task" /> */}
-        </TextField.Root>
-        {/* <TextArea placeholder="Description" /> */}
+    <TaskForm />
+  )
+}
 
-        <ErrorMessage>{errors.title?.message}</ErrorMessage>
-
-        <Controller
-          name="description"
-          control={control}
-          render={({ field }) => (
-            <SimpleMDE placeholder="Description" {...field} />
-          )}
-        />
-        <ErrorMessage>{errors.description?.message}</ErrorMessage>
-
-        <Button disabled={isSubmitting}>Submit New Task {isSubmitting && <Spinner />}</Button>
-      </form>
-    </div>
-  );
-};
-
-export default NewTaskPage;
+export default NewTaskPage

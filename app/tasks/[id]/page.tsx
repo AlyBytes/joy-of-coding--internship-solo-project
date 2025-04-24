@@ -1,10 +1,14 @@
-import TaskStatusBadge from "@/app/components/TaskStatusBadge";
+// import TaskStatusBadge from "@/app/components/TaskStatusBadge";
 import { prisma } from "@/prisma/client";
-import { Card, Flex, Heading, Text } from "@radix-ui/themes";
+import { Box, Button, Card, Flex, Grid, Heading, Text } from "@radix-ui/themes";
 import { notFound } from "next/navigation";
 import React from "react";
-import ReactMarkdown from "react-markdown";
+// import ReactMarkdown from "react-markdown";
 // import delay from 'delay'
+// import { Pencil2Icon } from "@radix-ui/react-icons";
+// import Link from "next/link";
+import EditTaskButton from "./EditTaskButton";
+import TaskDetails from "./TaskDetails";
 
 //to grab id parameter from the route we need to dfine interface with params property. the type of this is an object with one property - id of type string
 //all values in a route are string values by default - we need to parse them as numbers
@@ -26,16 +30,26 @@ const TaskDetailPage = async ({ params }: Props) => {
   // await delay(5000)
 
   return (
-    <div>
-      <Heading>{task.title}</Heading>
-      <Flex gap="3">
-        <TaskStatusBadge status={task.status} />
-        <Text>{task.createdAt.toDateString()}</Text>
-      </Flex>
-      <Card className="prose">
-        <ReactMarkdown>{task.description}</ReactMarkdown>
-      </Card>
-    </div>
+    <Grid columns={{ initial: "1", md: "2" }} gap="5">
+      <Box>
+        {/* <Heading>{task.title}</Heading>
+        <Flex gap="3">
+          <TaskStatusBadge status={task.status} />
+          <Text>{task.createdAt.toDateString()}</Text>
+        </Flex>
+        <Card className="prose">
+          <ReactMarkdown>{task.description}</ReactMarkdown>
+        </Card> */}
+        <TaskDetails task={task} />
+      </Box>
+      <Box>
+        {/* <Button>
+          <Pencil2Icon />
+          <Link href={`/tasks/${task.id}/edit`}>Edit Task</Link>
+        </Button> */}
+        <EditTaskButton taskId={task.id} />
+      </Box>
+    </Grid>
   );
 };
 
