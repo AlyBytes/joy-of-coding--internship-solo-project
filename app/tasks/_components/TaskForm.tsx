@@ -10,7 +10,7 @@ import "easymde/dist/easymde.min.css";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createTaskSchema } from "@/app/validationSchemas";
+import { taskSchema } from "@/app/validationSchemas";
 import { z } from "zod";
 import { ErrorMessage } from "@/app/components/ErrorMessage";
 import Spinner from "@/app/components/Spinner";
@@ -22,7 +22,7 @@ const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
   ssr: false,
 });
 
-type TaskFormData = z.infer<typeof createTaskSchema>;
+type TaskFormData = z.infer<typeof taskSchema>;
 //we're implementing client side validation with help of zod and axios
 // interface TaskForm {  ---> we are letting Zod infer this type based on this schema
 //   title: string;    ----> z.infer func returns a type, so we store it in type object
@@ -41,7 +41,7 @@ const TaskForm = ({ task }: { task?: Task }) => {
     handleSubmit,
     formState: { errors },
   } = useForm<TaskFormData>({
-    resolver: zodResolver(createTaskSchema),
+    resolver: zodResolver(taskSchema),
   });
   // console.log(register('title'))
   const [error, setError] = useState("");
@@ -50,7 +50,8 @@ const TaskForm = ({ task }: { task?: Task }) => {
   const onSubmit = handleSubmit(async (data) => {
     try {
       setSubmitting(true);
-      await axios.post("/api/tasks", data);
+      if (task) await axios.patch("/api/tasks" + task.id, data);
+      else await axios.post("/api/tasks", data);
       router.push("/tasks");
     } catch (error) {
       setSubmitting(false);
@@ -90,7 +91,8 @@ const TaskForm = ({ task }: { task?: Task }) => {
         <ErrorMessage>{errors.description?.message}</ErrorMessage>
 
         <Button disabled={isSubmitting}>
-          Submit New Task {isSubmitting && <Spinner />}
+          {task ? "Update Task" : "Submit New Task"}
+          {isSubmitting && <Spinner />}
         </Button>
       </form>
     </div>
