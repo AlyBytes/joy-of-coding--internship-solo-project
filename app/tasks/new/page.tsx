@@ -2,7 +2,8 @@
 
 import { Button, Callout, Text, TextArea, TextField } from "@radix-ui/themes";
 // import React from "react";
-import SimpleMDE from "react-simplemde-editor";
+import dynamic from "next/dynamic";
+// import SimpleMDE from "react-simplemde-editor";
 import { useForm, Controller } from "react-hook-form";
 import axios from "axios";
 import "easymde/dist/easymde.min.css";
@@ -13,6 +14,11 @@ import { createTaskSchema } from "@/app/validationSchemas";
 import { z } from "zod";
 import { ErrorMessage } from "@/app/components/ErrorMessage";
 import Spinner from "@/app/components/Spinner";
+
+//this is lazy loading (component) because everything is ;oaded on the server initially but this is a client side component that uses navigator - a browser API
+//so we need to disable static import and load it dynamically
+const SimpleMDE = dynamic(()=>import('react-simplemde-editor'),
+{ssr: false})
 
 type TaskForm = z.infer<typeof createTaskSchema>;
 //we're implementing client side validation with help of zod and axios

@@ -1,6 +1,8 @@
 import React from "react";
 import { Button, Table } from "@radix-ui/themes";
-import Link from "next/link";
+// import Link from "next/link";
+// import { Link } from "@radix-ui/themes"; //when using this component instead of Link from next navigation we lose client side rendering and page reloads every time
+import Link from "../components/Link";
 import { prisma } from "@/prisma/client";
 import TaskStatusBadge from "../components/TaskStatusBadge";
 import delay from "delay";
