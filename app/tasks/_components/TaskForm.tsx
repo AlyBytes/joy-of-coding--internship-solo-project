@@ -16,7 +16,7 @@ import { ErrorMessage } from "@/app/components/ErrorMessage";
 import Spinner from "@/app/components/Spinner";
 import { Task } from "@prisma/client";
 
-//this is lazy loading (component) because everything is ;oaded on the server initially but this is a client side component that uses navigator - a browser API
+//this is lazy loading (component) because everything is loaded on the server initially but this is a client side component that uses navigator - a browser API
 //so we need to disable static import and load it dynamically
 const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
   ssr: false,
@@ -50,9 +50,10 @@ const TaskForm = ({ task }: { task?: Task }) => {
   const onSubmit = handleSubmit(async (data) => {
     try {
       setSubmitting(true);
-      if (task) await axios.patch("/api/tasks" + task.id, data);
+      if (task) await axios.patch("/api/tasks/" + task.id, data);
       else await axios.post("/api/tasks", data);
       router.push("/tasks");
+      router.refresh;
     } catch (error) {
       setSubmitting(false);
       // console.log(error)
