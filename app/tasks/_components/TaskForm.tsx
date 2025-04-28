@@ -52,7 +52,7 @@ const TaskForm = ({ task }: { task?: Task }) => {
       setSubmitting(true);
       if (task) await axios.patch("/api/tasks/" + task.id, data);
       else await axios.post("/api/tasks", data);
-      router.push("/tasks");
+      router.push("/tasks/list");
       router.refresh;
     } catch (error) {
       setSubmitting(false);
