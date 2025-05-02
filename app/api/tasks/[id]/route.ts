@@ -22,7 +22,8 @@ export async function PATCH(
         where:{id:task.id},
         data:{
             title: body.title,
-            description: body.description
+            description: body.description,
+            status: body.status
         }
     });
 
