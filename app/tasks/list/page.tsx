@@ -165,7 +165,7 @@ import TasksActionButton from "./TasksActionButton";
 export const dynamic = "force-dynamic";
 
 export default async function TasksPage({
-  searchParams
+  searchParams,
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
@@ -176,10 +176,13 @@ export default async function TasksPage({
   const resolvedSearchParams = await searchParams;
 
   // const statusRaw = resolvedSearchParams.status;
+  const directionRaw = resolvedSearchParams?.orderDirection;
+  const orderDirection =
+    directionRaw === "desc" || directionRaw === "asc" ? directionRaw : "asc";
   const orderByRaw = resolvedSearchParams.orderBy;
   const pageRaw = resolvedSearchParams.page;
   console.log("Search Params:", resolvedSearchParams);
-  
+
   const rawStatus = resolvedSearchParams?.status;
   console.log("Raw Status from Search Params:", rawStatus);
   // const rawStatus = searchParams.status;
@@ -227,17 +230,39 @@ export default async function TasksPage({
 
   const tasks = await prisma.task.findMany({
     where,
-    orderBy: { [orderBy]: "asc" },
+    ...(orderBy !== "status" && {
+      orderBy: { [orderBy]: orderDirection },
+    }),
+    // orderBy:
+    // orderBy === "status"
+    //   ? undefined // handled separately below
+    //   : { [orderBy]: orderDirection },
     skip: (page - 1) * pageSize,
     take: pageSize,
   });
   console.log("Fetched tasks:", tasks);
+  let sortedTasks = tasks;
+
+  if (orderBy === "status") {
+    const order = {
+      OPEN: 0,
+      IN_PROGRESS: 1,
+      CLOSED: 2,
+    };
+
+    const multiplier = orderDirection === "asc" ? 1 : -1;
+
+    sortedTasks = tasks.sort((a, b) => {
+      return (order[a.status] - order[b.status]) * multiplier;
+    });
+  }
 
   const taskCount = await prisma.task.count({ where });
 
   const parsedQuery: TaskQuery = {
     status,
     orderBy,
+    orderDirection,
     page: page.toString(),
   };
 
@@ -252,7 +277,7 @@ export default async function TasksPage({
   return (
     <Flex direction="column" gap="3">
       <TasksActionButton />
-      <TaskTable searchParams={parsedQuery} tasks={tasks} />
+      <TaskTable searchParams={parsedQuery} tasks={sortedTasks} />
       <Pagination
         pageSize={pageSize}
         currentPage={page}

@@ -9,6 +9,7 @@ import { Status, Task } from "@prisma/client";
 export interface TaskQuery {
   status: Status | "ALL";
   orderBy: keyof Task;
+  orderDirection: "asc" | "desc";
   page: string;
 }
 
@@ -21,41 +22,52 @@ export interface TaskQuery {
 //   tasks: Task[];
 // }
 
-
 export interface Props {
-    searchParams: TaskQuery; // ✅ This fixes the type mismatch
-    tasks: Task[];
-  }
-  
+  searchParams: TaskQuery; // ✅ This fixes the type mismatch
+  tasks: Task[];
+}
+
 const TaskTable = ({ searchParams, tasks }: Props) => {
-  const { status, page } = searchParams;
+  const { status, page, orderBy, orderDirection } = searchParams;
+
   return (
     <Table.Root variant="surface">
       <Table.Header>
         <Table.Row>
-          {columns.map((column) => (
-            <Table.ColumnHeaderCell
-              key={column.value}
-              className={column.className}
-            >
-              <NextLink
-                href={{
-                  pathname: "/tasks",
-                  query: {
-                    status,
-                    page,
-                    orderBy: column.value,
-                  },
-                }}
+          {columns.map((column) => {
+            const isActive = column.value === orderBy;
+            const nextDirection =
+              isActive && orderDirection === "asc" ? "desc" : "asc";
+
+            return (
+              <Table.ColumnHeaderCell
+                key={column.value}
+                className={column.className}
               >
-                {column.label}
-              </NextLink>
-              {column.value === searchParams.orderBy && (
-                <ArrowUpIcon className="inline" />
-              )}
-              Task
-            </Table.ColumnHeaderCell>
-          ))}
+                <NextLink
+                  href={{
+                    pathname: "/tasks/list",
+                    query: {
+                      status,
+                      page,
+                      orderBy: column.value,
+                      orderDirection: nextDirection,
+                    },
+                  }}
+                  className="inline-flex items-center space-x-1"
+                >
+                  {column.label}
+                  {isActive && (
+                    <ArrowUpIcon
+                      className={`transition-transform ${
+                        orderDirection === "desc" ? "rotate-180" : ""
+                      }`}
+                    />
+                  )}
+                </NextLink>
+              </Table.ColumnHeaderCell>
+            );
+          })}
 
           {/* <Table.ColumnHeaderCell className="hidden md:table-cell">
           Status
@@ -66,7 +78,7 @@ const TaskTable = ({ searchParams, tasks }: Props) => {
         </Table.Row>
       </Table.Header>
       <Table.Body>
-        {tasks.map((task) => (
+        {/* {tasks.map((task) => (
           <Table.Row key={task.id}>
             <Table.Cell>
               <Link href={`/tasks/${task.id}`}>{task.title}</Link>
@@ -82,7 +94,31 @@ const TaskTable = ({ searchParams, tasks }: Props) => {
               {task.createdAt.toDateString()}
             </Table.Cell>
           </Table.Row>
-        ))}
+        ))} */}
+        {tasks.length > 0 ? (
+          tasks.map((task) => (
+            <Table.Row key={task.id}>
+              <Table.Cell>
+                <Link href={`/tasks/${task.id}`}>{task.title}</Link>
+                <div className="block md:hidden">
+                  <TaskStatusBadge status={task.status} />
+                </div>
+              </Table.Cell>
+              <Table.Cell className="hidden md:table-cell">
+                <TaskStatusBadge status={task.status} />
+              </Table.Cell>
+              <Table.Cell className="hidden md:table-cell">
+                {task.createdAt.toDateString()}
+              </Table.Cell>
+            </Table.Row>
+          ))
+        ) : (
+          <Table.Row>
+            <Table.Cell colSpan={3} className="text-center text-gray-500">
+              No tasks found.
+            </Table.Cell>
+          </Table.Row>
+        )}
       </Table.Body>
     </Table.Root>
   );
