@@ -8,7 +8,7 @@ import {
   TextArea,
   TextField,
 } from "@radix-ui/themes";
-// import React from "react";
+import React from "react";
 import dynamic from "next/dynamic";
 // import SimpleMDE from "react-simplemde-editor";
 import { useForm, Controller } from "react-hook-form";
@@ -55,7 +55,7 @@ const TaskForm = ({ task }: { task?: Task }) => {
   const [isSubmitting, setSubmitting] = useState(false);
 
   const onSubmit = handleSubmit(async (data) => {
-    console.log("Submitting:", data); 
+    console.log("SUBMITTTING DATAAAAA:", data);
     try {
       setSubmitting(true);
       if (task) await axios.patch("/api/tasks/" + task.id, data);
@@ -109,8 +109,8 @@ const TaskForm = ({ task }: { task?: Task }) => {
                 Status
               </label>
               <Select.Root value={field.value} onValueChange={field.onChange}>
-
                 <Select.Trigger />
+                 
                 <Select.Content>
                   <Select.Item value="OPEN">Open</Select.Item>
                   <Select.Item value="IN_PROGRESS">In Progress</Select.Item>

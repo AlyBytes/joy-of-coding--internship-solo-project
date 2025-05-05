@@ -181,10 +181,10 @@ export default async function TasksPage({
     directionRaw === "desc" || directionRaw === "asc" ? directionRaw : "asc";
   const orderByRaw = resolvedSearchParams.orderBy;
   const pageRaw = resolvedSearchParams.page;
-  console.log("Search Params:", resolvedSearchParams);
+  // console.log("Search Params:", resolvedSearchParams);
 
   const rawStatus = resolvedSearchParams?.status;
-  console.log("Raw Status from Search Params:", rawStatus);
+  // console.log("Raw Status from Search Params:", rawStatus);
   // const rawStatus = searchParams.status;
 
   // const status: Status | "ALL" =
@@ -224,7 +224,7 @@ export default async function TasksPage({
       ? parseInt(pageRaw)
       : 1;
   const pageSize = 10;
-  console.log("Status value:", status);
+  // console.log("Status value:", status);
 
   const where = status === "ALL" ? {} : { status };
 
@@ -240,7 +240,7 @@ export default async function TasksPage({
     skip: (page - 1) * pageSize,
     take: pageSize,
   });
-  console.log("Fetched tasks:", tasks);
+  // console.log("Fetched tasks:", tasks);
   let sortedTasks = tasks;
 
   if (orderBy === "status") {
@@ -266,11 +266,11 @@ export default async function TasksPage({
     page: page.toString(),
   };
 
-  console.log("Raw status from query:", rawStatus);
-  console.log("Final parsed status:", status);
-  console.log("Where filter:", where);
+  // console.log("Raw status from query:", rawStatus);
+  // console.log("Final parsed status:", status);
+  // console.log("Where filter:", where);
 
-  console.log("Fetched tasks:", tasks);
+  // console.log("Fetched tasks:", tasks);
 
   console.log("Prisma query parameters:", { where, orderBy, page });
 
