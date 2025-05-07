@@ -18,6 +18,7 @@ model Task {
   title       String   @db.VarChar(255)
   description String   @db.Text
   status      Status   @default(OPEN)
+  dueDate     DateTime?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 }

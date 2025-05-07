@@ -18,14 +18,31 @@ export async function PATCH(
     if(!task) 
         return NextResponse.json({error: "Invalid Task"}, {status: 404})
 
-    const updatedTask = await prisma.task.update({
-        where:{id:task.id},
-        data:{
-            title: body.title,
-            description: body.description,
-            status: body.status
-        }
-    });
+    // Prepare the data for update, including dueDate if provided
+  const updatedData: any = {
+    title: body.title,
+    description: body.description,
+    status: body.status,
+  };
+
+  // Only update dueDate if it is provided
+  if (body.dueDate) {
+    updatedData.dueDate = new Date(body.dueDate); // Ensure dueDate is stored as a Date object
+  }
+   // Update the task in the database
+   const updatedTask = await prisma.task.update({
+    where: { id: task.id },
+    data: updatedData,
+  });
+
+    // const updatedTask = await prisma.task.update({
+    //     where:{id:task.id},
+    //     data:{
+    //         title: body.title,
+    //         description: body.description,
+    //         status: body.status
+    //     }
+    // });
 
     return NextResponse.json(updatedTask)
 

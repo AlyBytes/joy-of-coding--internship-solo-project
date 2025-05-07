@@ -1,0 +1,12 @@
+/* TaskSummary.module.css */
+
+.inProgressOnlyOnDesktop {
+    display: none;
+  }
+  
+  @media (min-width: 640px) {
+    .inProgressOnlyOnDesktop {
+      display: block;
+    }
+  }
+  

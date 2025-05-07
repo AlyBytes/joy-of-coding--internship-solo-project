@@ -13,17 +13,8 @@ export interface TaskQuery {
   page: string;
 }
 
-// export interface Props {
-//   searchParams: {
-//     status: Status;
-//     orderBy: keyof Task;
-//     page: string;
-//   };
-//   tasks: Task[];
-// }
-
 export interface Props {
-  searchParams: TaskQuery; // ✅ This fixes the type mismatch
+  searchParams: TaskQuery;
   tasks: Task[];
 }
 
@@ -68,37 +59,13 @@ const TaskTable = ({ searchParams, tasks }: Props) => {
               </Table.ColumnHeaderCell>
             );
           })}
-
-          {/* <Table.ColumnHeaderCell className="hidden md:table-cell">
-          Status
-        </Table.ColumnHeaderCell>
-        <Table.ColumnHeaderCell className="hidden md:table-cell">
-          Created
-        </Table.ColumnHeaderCell> */}
         </Table.Row>
       </Table.Header>
       <Table.Body>
-        {/* {tasks.map((task) => (
-          <Table.Row key={task.id}>
-            <Table.Cell>
-              <Link href={`/tasks/${task.id}`}>{task.title}</Link>
-
-              <div className="block md:hidden">
-                <TaskStatusBadge status={task.status} />
-              </div>
-            </Table.Cell>
-            <Table.Cell className="hidden md:table-cell">
-              <TaskStatusBadge status={task.status} />
-            </Table.Cell>
-            <Table.Cell className="hidden md:table-cell">
-              {task.createdAt.toDateString()}
-            </Table.Cell>
-          </Table.Row>
-        ))} */}
         {tasks.length > 0 ? (
           tasks.map((task) => (
             <Table.Row key={task.id}>
-              <Table.Cell>
+              <Table.Cell className="max-w-[180px] truncate">
                 <Link href={`/tasks/${task.id}`}>{task.title}</Link>
                 <div className="block md:hidden">
                   <TaskStatusBadge status={task.status} />
@@ -109,6 +76,9 @@ const TaskTable = ({ searchParams, tasks }: Props) => {
               </Table.Cell>
               <Table.Cell className="hidden md:table-cell">
                 {task.createdAt.toDateString()}
+              </Table.Cell>
+              <Table.Cell className="hidden md:table-cell text-gray-700">
+                {task.dueDate ? new Date(task.dueDate).toDateString() : "—"}
               </Table.Cell>
             </Table.Row>
           ))
@@ -129,9 +99,18 @@ const columns: {
   value: keyof Task;
   className?: string;
 }[] = [
-  { label: "Task", value: "title" },
-  { label: "Status", value: "status", className: "hidden md:table-cell" },
-  { label: "Created", value: "createdAt", className: "hidden md:table-cell" },
+  { label: "Task", value: "title", className: "w-1/3" },
+  { label: "Status", value: "status", className: "hidden md:table-cell w-1/6" },
+  {
+    label: "Created",
+    value: "createdAt",
+    className: "hidden md:table-cell w-1/6",
+  },
+  {
+    label: "Due Date",
+    value: "dueDate",
+    className: "hidden md:table-cell w-1/6",
+  },
 ];
 export const columnNames = columns.map((column) => column.value);
 

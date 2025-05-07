@@ -6,7 +6,7 @@ import TaskStatusFilter from "./TaskStatusFilter";
 const TasksActionButton = () => {
   return (
     <Flex justify="between">
-      <TaskStatusFilter />
+      {/* <TaskStatusFilter /> */}
       <Button>
         <Link href="/tasks/new">New Task</Link>
       </Button>

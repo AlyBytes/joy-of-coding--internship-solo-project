@@ -6,4 +6,8 @@ export const taskSchema = z.object({
     description: z.string().min(1, 'Please describe your task').max(255),
     // status: z.nativeEnum(Status),
     status: z.enum(["OPEN", "IN_PROGRESS", "CLOSED"]),
+    dueDate: z
+    .string()
+    .optional()
+    .refine((date) => !date || !isNaN(Date.parse(date)), "Invalid due date"),
 });
