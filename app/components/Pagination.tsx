@@ -1,9 +1,14 @@
-'use client';
+"use client";
 
-import { ChevronLeftIcon, ChevronRightIcon, DoubleArrowLeftIcon, DoubleArrowRightIcon } from '@radix-ui/react-icons';
-import { Button, Flex, Text } from '@radix-ui/themes';
-import { useRouter, useSearchParams } from 'next/navigation';
-import React from 'react';
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  DoubleArrowLeftIcon,
+  DoubleArrowRightIcon,
+} from "@radix-ui/react-icons";
+import { Button, Flex, Text } from "@radix-ui/themes";
+import { useRouter, useSearchParams } from "next/navigation";
+import React from "react";
 
 interface Props {
   itemCount: number;
@@ -11,11 +16,7 @@ interface Props {
   currentPage: number;
 }
 
-const Pagination = ({
-  itemCount,
-  pageSize,
-  currentPage,
-}: Props) => {
+const Pagination = ({ itemCount, pageSize, currentPage }: Props) => {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -24,9 +25,9 @@ const Pagination = ({
 
   const changePage = (page: number) => {
     const params = new URLSearchParams(searchParams);
-    params.set('page', page.toString());
-    router.push('?' + params.toString());
-  }
+    params.set("page", page.toString());
+    router.push("?" + params.toString());
+  };
 
   return (
     <Flex align="center" gap="2">

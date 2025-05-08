@@ -1,7 +1,5 @@
-import TaskStatusBadge from "@/app/components/TaskStatusBadge";
 import { Heading, Flex, Card, Box } from "@radix-ui/themes";
 import React from "react";
-import ReactMarkdown from "react-markdown";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
@@ -10,8 +8,8 @@ const LoadingTaskDetailPage = () => {
     <Box className="max-w-xl">
       <Skeleton />
       <Flex gap="3">
-        <Skeleton width='5rem' />
-        <Skeleton width='8rem' />
+        <Skeleton width="5rem" />
+        <Skeleton width="8rem" />
       </Flex>
       <Card className="prose">
         <Skeleton count={3} />

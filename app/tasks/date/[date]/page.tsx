@@ -1,5 +1,3 @@
-// app/tasks/date/[date]/page.tsx
-
 import { redirect } from "next/navigation";
 
 import TaskDetails from "../../[id]/TaskDetails";
@@ -17,15 +15,10 @@ interface Props {
 export default async function TasksByDatePage({ params }: Props) {
   const { date } = params;
 
-  // Parse and validate date
   const parsedDate = new Date(date);
   if (isNaN(parsedDate.getTime())) {
-    return <p>Invalid date.</p>; // Optionally handle invalid format
+    return <p>Invalid date.</p>;
   }
-
-  // Get tasks where dueDate is on that exact day
-  //   const startOfDay = new Date(`${date}T00:00:00`);
-  // const endOfDay = new Date(`${date}T23:59:59.999`);
 
   const statusClassMap: Record<"OPEN" | "IN_PROGRESS" | "CLOSED", string> = {
     OPEN: "bg-orange-50",
@@ -60,7 +53,6 @@ export default async function TasksByDatePage({ params }: Props) {
         Task{tasks.length > 1 ? "s" : ""} for {date}
       </Heading>
       {tasks.map((task) => (
-        // <TaskDetails key={task.id} task={task} />
         <div
           key={task.id}
           className={`space-y-4 rounded-xl shadow-md p-4 ${

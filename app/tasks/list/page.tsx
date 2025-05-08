@@ -30,7 +30,7 @@ export default async function TasksPage({
       ? "ALL"
       : isValidStatus(rawStatus)
       ? (rawStatus as Status)
-      : "ALL"; // Fallback to 'ALL' if invalid status
+      : "ALL";
 
   const orderBy =
     typeof orderByRaw === "string" &&
@@ -43,7 +43,6 @@ export default async function TasksPage({
       ? parseInt(pageRaw)
       : 1;
   const pageSize = 10;
-  // console.log("Status value:", status);
 
   const where = status === "ALL" ? {} : { status };
 
@@ -52,10 +51,7 @@ export default async function TasksPage({
     ...(orderBy !== "status" && {
       orderBy: { [orderBy]: orderDirection },
     }),
-    // orderBy:
-    // orderBy === "status"
-    //   ? undefined // handled separately below
-    //   : { [orderBy]: orderDirection },
+
     skip: (page - 1) * pageSize,
     take: pageSize,
   });
