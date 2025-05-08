@@ -27,6 +27,12 @@ export default async function TasksByDatePage({ params }: Props) {
   //   const startOfDay = new Date(`${date}T00:00:00`);
   // const endOfDay = new Date(`${date}T23:59:59.999`);
 
+  const statusClassMap: Record<"OPEN" | "IN_PROGRESS" | "CLOSED", string> = {
+    OPEN: "bg-orange-50",
+    IN_PROGRESS: "bg-violet-50",
+    CLOSED: "bg-green-50",
+  };
+
   const [year, month, day] = date.split("-").map(Number);
 
   const startOfDay = new Date(year, month - 1, day, 0, 0, 0, 0);
@@ -55,13 +61,18 @@ export default async function TasksByDatePage({ params }: Props) {
       </Heading>
       {tasks.map((task) => (
         // <TaskDetails key={task.id} task={task} />
-        <Card key={task.id} className="space-y-4">
+        <div
+          key={task.id}
+          className={`space-y-4 rounded-xl shadow-md p-4 ${
+            statusClassMap[task.status]
+          }`}
+        >
           <TaskDetails task={task} />
-          <Flex gap="3">
+          {/* <Flex gap="3">
             <EditTaskButton taskId={task.id} />
             <DeleteTaskButton taskId={task.id} />
-          </Flex>
-        </Card>
+          </Flex> */}
+        </div>
       ))}
     </div>
   );

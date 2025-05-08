@@ -55,10 +55,10 @@ const TaskDetails = ({ task }: { task: Task }) => {
         </Card>
 
         {/* Buttons placed directly below the description */}
-        {/* <Flex gap="3">
+        <Flex gap="3">
           <EditTaskButton taskId={task.id} />
           <DeleteTaskButton taskId={task.id} />
-        </Flex> */}
+        </Flex>
       </Box>
 
       {/* Right side: calendar */}

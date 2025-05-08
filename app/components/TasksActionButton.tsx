@@ -1,7 +1,7 @@
 import { Button, Flex } from "@radix-ui/themes";
 import Link from "next/link";
 import React from "react";
-import TaskStatusFilter from "./TaskStatusFilter";
+import TaskStatusFilter from "../tasks/list/TaskStatusFilter";
 
 const TasksActionButton = () => {
   return (

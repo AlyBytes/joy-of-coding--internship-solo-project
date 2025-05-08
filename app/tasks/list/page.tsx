@@ -3,7 +3,7 @@ import { Status, Task } from "@prisma/client";
 import { Flex } from "@radix-ui/themes";
 import Pagination from "@/app/components/Pagination";
 import TaskTable, { TaskQuery, columnNames } from "./TaskTable";
-import TasksActionButton from "./TasksActionButton";
+import TasksActionButton from "../../components/TasksActionButton";
 
 export const dynamic = "force-dynamic";
 
@@ -12,8 +12,6 @@ export default async function TasksPage({
 }: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) {
-
-
   const resolvedSearchParams = await searchParams;
 
   const directionRaw = resolvedSearchParams?.orderDirection;
@@ -21,10 +19,8 @@ export default async function TasksPage({
     directionRaw === "desc" || directionRaw === "asc" ? directionRaw : "asc";
   const orderByRaw = resolvedSearchParams.orderBy;
   const pageRaw = resolvedSearchParams.page;
- 
 
   const rawStatus = resolvedSearchParams?.status;
-
 
   const isValidStatus = (val: any): val is Status =>
     ["OPEN", "IN_PROGRESS", "CLOSED"].includes(val);
@@ -35,7 +31,6 @@ export default async function TasksPage({
       : isValidStatus(rawStatus)
       ? (rawStatus as Status)
       : "ALL"; // Fallback to 'ALL' if invalid status
-
 
   const orderBy =
     typeof orderByRaw === "string" &&
@@ -89,7 +84,6 @@ export default async function TasksPage({
     orderDirection,
     page: page.toString(),
   };
-
 
   console.log("Prisma query parameters:", { where, orderBy, page });
 

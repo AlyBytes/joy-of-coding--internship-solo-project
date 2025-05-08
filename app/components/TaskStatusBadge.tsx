@@ -13,11 +13,11 @@ interface Props {
 //we defin this mapping outside of componnet because we don;t need it to render every time
 const statusMap: Record<
   Status,
-  { label: string; color: "red" | "violet" | "green" }
+  { label: string; color: "orange" | "violet" | "green" }
 > = {
-  OPEN: { label: "open", color: "red" },
+  OPEN: { label: "open", color: "orange" },
   IN_PROGRESS: { label: "in progress", color: "violet" },
-  CLOSED: { label: "closed", color: "green" },
+  CLOSED: { label: "done", color: "green" },
 };
 
 const TaskStatusBadge = ({ status }: { status: Status }) => {

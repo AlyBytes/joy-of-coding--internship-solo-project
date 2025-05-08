@@ -9,6 +9,14 @@ import DeleteTaskButton from "./DeleteTaskButton";
 interface Props {
   params: Promise<{ id: string }>; //  Promise here!
 }
+
+const statusClassMap: Record<"OPEN" | "IN_PROGRESS" | "CLOSED", string> = {
+  OPEN: "bg-orange-50",
+  IN_PROGRESS: "bg-violet-50",
+  CLOSED: "bg-green-50",
+};
+
+
 const TaskDetailPage = async ({ params }: Props) => {
   const resolvedParams = await params;
 
@@ -19,14 +27,16 @@ const TaskDetailPage = async ({ params }: Props) => {
 
   return (
     <Grid columns={{ initial: "1", sm: "5" }} gap="5">
-      <Box className="md:col-span-4">
+      <Box className={`md:col-span-4 space-y-6 p-6 rounded-xl shadow-md ${
+        statusClassMap[task.status]
+      }`}>
         <TaskDetails task={task} />
       {/* </Box>
       <Box> */}
-        <Flex direction="column" gap="4">
+        {/* <Flex direction="column" gap="4">
           <EditTaskButton taskId={task.id} />
           <DeleteTaskButton taskId={task.id} />
-        </Flex>
+        </Flex> */}
       </Box>
     </Grid>
   );
