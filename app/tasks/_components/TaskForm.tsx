@@ -20,11 +20,20 @@ const SimpleMDE = dynamic(() => import("react-simplemde-editor"), {
 
 type TaskFormData = z.infer<typeof taskSchema>;
 
+// function parseDateToLocalMidnight(dateStr: string): Date | undefined {
+//   if (!dateStr) return undefined;
+//   const [year, month, day] = dateStr.split("-").map(Number);
+//   if (!year || !month || !day) return undefined;
+//   return new Date(year, month - 1, day, 0, 0, 0, 0);
+// }
+
 export default function TaskForm({ task }: { task?: Task }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const dueDateParam = searchParams.get("dueDate");
-  const defaultDueDate = dueDateParam ? new Date(dueDateParam) : undefined;
+
+  const defaultDueDate =
+    task?.dueDate?.toISOString().split("T")[0] || dueDateParam || "";
 
   const {
     register,
@@ -37,9 +46,7 @@ export default function TaskForm({ task }: { task?: Task }) {
       title: task?.title || "",
       description: task?.description || "",
       status: task?.status || "OPEN",
-      dueDate: task?.dueDate
-        ? task.dueDate.toISOString().split("T")[0]
-        : dueDateParam || "",
+      dueDate: defaultDueDate,
     },
   });
 
@@ -49,17 +56,23 @@ export default function TaskForm({ task }: { task?: Task }) {
   const onSubmit = handleSubmit(async (data) => {
     try {
       setSubmitting(true);
+
       const payload = {
-        ...data,
+        title: data.title,
+        description: data.description,
+        status: data.status,
         dueDate: data.dueDate || undefined,
       };
 
-      if (task) await axios.patch(`/api/tasks/${task.id}`, payload);
-      else await axios.post("/api/tasks", payload);
+      if (task) {
+        await axios.patch(`/api/tasks/${task.id}`, payload);
+      } else {
+        await axios.post("/api/tasks", payload);
+      }
 
       router.push("/");
       router.refresh();
-    } catch (error) {
+    } catch (err) {
       setSubmitting(false);
       setError("Unexpected Error");
     }
@@ -102,7 +115,6 @@ export default function TaskForm({ task }: { task?: Task }) {
             <ErrorMessage>{errors.description?.message}</ErrorMessage>
           </div>
 
-          {/* Status */}
           <div>
             <label className="block text-sm font-medium text-gray-800 mb-1">
               Status
